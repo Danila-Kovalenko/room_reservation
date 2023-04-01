@@ -10,8 +10,14 @@ from app.core.config import settings
 class PreBase:
     @declared_attr
     def __tablename__(cls):
+        # Именем таблицы будет название модели в нижнем регистре.
+        return cls.__name.lower()
 
-Base = declarative_base()
+    # Во все таблицы будет добавлено поле ID.
+    id = Column(Integer, primary_key=True)
+
+
+Base = declarative_base(cls=PreBase)
 
 engine = create_async_engine(settings.database_url)
 
