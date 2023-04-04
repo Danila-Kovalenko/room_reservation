@@ -13,4 +13,5 @@ async def create_new_meeting_room(meeting_room: MeetingRoomCreate):
         raise HTTPException(status_code=422,
                             detail='Переговорка с таким именем уже существует!',)
     new_room = await create_meeting_room(meeting_room)
+
     return new_room
