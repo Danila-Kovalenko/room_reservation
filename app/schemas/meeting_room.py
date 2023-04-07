@@ -21,3 +21,6 @@ class MeetingRoomCreate(MeetingRoomBase):
 
 class MeetingRoomDB(BaseModel):
     id: int
+
+    class Config:
+        orm_mode = True
