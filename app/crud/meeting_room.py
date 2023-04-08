@@ -48,3 +48,11 @@ async def update_meeting_room(db_room: MeetingRoom,
                               session: AsyncSession) -> MeetingRoom:
     obj_data = jsonable_encoder(db_room)
     update_data = room_in.dict(exclude_unset=True)
+    for field in obj_data:
+        if field in update_data:
+            setattr(db_room, field, update_data[field])
+    session.add(db_room)
+    await session.commit()
+    await session.refresh(db_room)
+    return db_room
+
