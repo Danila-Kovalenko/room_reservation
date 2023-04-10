@@ -20,7 +20,12 @@ class MeetingRoomCreate(MeetingRoomBase):
 
 
 class MeetingRoomUpdate(MeetingRoomBase):
-    pass
+    @validator('name')
+    def empty_name(cls, value: str):
+        if value is not None:
+            return value
+        raise ValueError('name must not empty')
+
 
 
 class MeetingRoomDB(MeetingRoomCreate):
