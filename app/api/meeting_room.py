@@ -45,8 +45,13 @@ async def partially_update_meeting_room(meeting_room_id: int, # ID обновл�
     meeting_room = await update_meeting_room(meeting_room, obj_in, session)
     return meeting_room
 
-@router.delete('/{meeting_room_id}')
-async def remove_meeting_room()
+@router.delete('/{meeting_room_id}',
+               response_model=MeetingRoomDB,
+               response_model_exclude_none=True,)
+async def remove_meeting_room(meeting_room_id: int,
+                              session: AsyncSession = Depends(get_async_session)):
+    meeting_room = await check_meeting_room_exists(meeting_room_id, session)
+    return meeting_room
 
 async def check_name_duplicate(room_name: str,
                                session: AsyncSession,) -> None:
