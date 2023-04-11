@@ -40,14 +40,10 @@ async def partially_update_meeting_room(meeting_room_id: int, # ID обновл�
                                         obj_in: MeetingRoomUpdate,
                                         session: AsyncSession = Depends(get_async_session), ):
     meeting_room = await check_meeting_room_exists(meeting_room_id, session)
-    if meeting_room is None:
-        raise HTTPException(status_code=404,
-                            detail='Переговорка не найдена!')
     if obj_in.name is not None:
         await check_name_duplicate(obj_in.name, session)
     meeting_room = await update_meeting_room(meeting_room, obj_in, session)
     return meeting_room
-
 
 @router.delete('/{meeting_room_id}')
 async def remove_meeting_room()
@@ -64,7 +60,8 @@ async def check_name_duplicate(room_name: str,
 
 async def check_meeting_room_exists(meeting_room_id: int,
                                     session: AsyncSession) -> MeetingRoom:
-    meeting_room = await session
+    """Корутина, проверяющая наличие переговорки."""
+    meeting_room = await get_meeting_room_by_id(meeting_room_id, session)
     if meeting_room is None:
         raise HTTPException(status_code=404,
                             detail='Переговорка не найдена!')
