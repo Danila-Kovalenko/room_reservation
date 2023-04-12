@@ -51,6 +51,7 @@ async def partially_update_meeting_room(meeting_room_id: int, # ID обновл�
 async def remove_meeting_room(meeting_room_id: int,
                               session: AsyncSession = Depends(get_async_session)):
     meeting_room = await check_meeting_room_exists(meeting_room_id, session)
+    meeting_room = await delete_meeting_room(meeting_room, session)
     return meeting_room
 
 async def check_name_duplicate(room_name: str,
