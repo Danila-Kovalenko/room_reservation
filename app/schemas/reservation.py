@@ -12,6 +12,21 @@ class ReservationBase(BaseModel):
 class ReservationCreate(ReservationBase):
     meetingroom_id: int
 
+    @validator('from_reserve')
+    def check_from_reserve_before_to_reserve(cls, value):
+        if value['from_reserve'] >= value['to_reserve']:
+            raise ValueError('Время начала бронирования '
+                'не может быть больше времени окончания')
+        return value
+
+    @validator('')
+    def check_from_reserve_later_than_now(cls, value):
+        if dt.now() >= value:
+            raise ValueError('Время начала бронирования '
+                'не может быть меньше текущего времени')
+        return value
+
+
 
 class ReservationUpdate(ReservationBase):
     pass
