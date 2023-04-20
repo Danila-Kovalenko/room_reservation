@@ -7,9 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.validators import check_name_duplicate, check_meeting_room_exists
 from app.core.db import get_async_session
 from app.crud.meeting_room import meeting_room_crud
-from app.schemas.meeting_room import (
-    MeetingRoomCreate, MeetingRoomDB, MeetingRoomUpdate
-)
+from app.schemas.meeting_room import (MeetingRoomCreate,
+                                      MeetingRoomDB,
+                                      MeetingRoomUpdate)
 
 
 router = APIRouter()
