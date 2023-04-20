@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.meeting_room import meeting_room_crud
+from app.crud.reservation import reservation_crud
 from app.models.meeting_room import MeetingRoom
 
 
@@ -23,3 +24,10 @@ async def check_meeting_room_exists(meeting_room_id: int,
         raise HTTPException(status_code=404,
                             detail='Переговорка не найдена!')
     return meeting_room
+
+async def check_reservation_intersections(**kwagrs) -> None:
+    """Корутина, проверяющая свободен ли запрошенный интервал времени для переговорки."""
+    reserv = await reservation_crud.get_reservations_at_the_same_time(**kwagrs)
+    if reserv is not None:
+        raise HTTPException(status_code=422,
+                            detail=str(reserv))
