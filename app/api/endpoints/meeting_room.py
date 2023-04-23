@@ -59,4 +59,7 @@ async def remove_meeting_room(meeting_room_id: int,
 async def get_reservations_for_room(meeting_room_id: int,
                                     session: AsyncSession = Depends(get_async_session)
                                     ) -> List[ReservationDB]:
-
+    await check_meeting_room_exists(meeting_room_id, session)
+    reservations = await reservation_crud.get_future_reservations_for_room(room_id=meeting_room_id,
+                                                                            session=session)
+    return reservations
