@@ -21,7 +21,7 @@ class CRUDReservation(CRUDBase):
                                                 reservation_id: Optional[int] = None,
                                                 session: AsyncSession,
                                                 ) -> List[Reservation]:
-        """Метод ищущий пересекающиеся объекты по времени с интервалом,
+        """Метод, ищущий пересекающиеся объекты по времени с интервалом,
         указанном в запросе."""
         # Выносим уже существующий запрос в отдельное выражение.
         select_stmt = select(Reservation).where(
@@ -46,6 +46,7 @@ class CRUDReservation(CRUDBase):
     async def get_future_reservations_for_room(self,
                                                room_id: int,
                                                session: AsyncSession):
+        """Метод, ищущий объекты, период бронирования которых ещё не истёк."""
         reservations  = await session.execute(select(Reservation)).where(
             Reservation.meetingroom_id == room_id,
             Reservation.to_reserve >= dt.now())

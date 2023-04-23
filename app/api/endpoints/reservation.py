@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.post('/', response_model=ReservationDB)
 async def create_reservation(reservation: ReservationCreate,
-                             session: AsyncSession, ):
+                             session: AsyncSession = Depends(get_async_session), ):
     await check_meeting_room_exists(reservation.meetingroom_id, session)
     await check_reservation_intersections(
             # Так как валидатор принимает **kwargs,
@@ -62,7 +62,7 @@ async def update_reservation(reservation_id: int,
         db_obj=reservation,
         # На обновление передаем объект класса ReservationUpdate, как и требуется.
         obj_in=obj_in,
-        session=session,
+        session=session
     )
     return reservation
 
