@@ -31,3 +31,11 @@ async def check_reservation_intersections(**kwagrs) -> None:
     if reserv is not None:
         raise HTTPException(status_code=422,
                             detail=str(reserv))
+
+async def check_reservation_before_edit(reservation_id:int, session: AsyncSession,):
+    """Корутина, проверяющая существует ли запрошенный объект бронирования."""
+    reservation = await reservation_crud.get(reservation_id, session)
+    if not reservation:
+        raise HTTPException(status_code=404,
+                            detail='Бронь не найдена!')
+    return reservation
