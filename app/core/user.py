@@ -28,3 +28,39 @@ def get_jwt_strategy() -> JWTStrategy:
 auth_backend = AuthenticationBackend(name='jwt',  # Произвольное имя бэкенда (должно быть уникальным).
                                      transport=bearer_transport,
                                      get_strategy=get_jwt_strategy,)
+
+
+class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
+
+    # Здесь можно описать свои условия валидации пароля.
+    # При успешной валидации функция ничего не возвращает.
+    # При ошибке валидации будет вызван специальный класс ошибки
+    # InvalidPasswordException.
+    async def validate_password(self,
+                                password: str,
+                                user: Union[UserCreate, User],) -> None:
+        if len(password) < 3:
+            raise InvalidPasswordException(
+                reason='Password should be at least 3 characters'
+            )
+        if user.email in password:
+            raise InvalidPasswordException(
+                reason='Password should not contain e-mail'
+            )
+
+    async def on_after_register(self,
+                                user: User,
+                                request: Optional[Request] = None):
+        """Метода для действий после успешной регистрации пользователя."""
+        # Вместо print здесь можно было бы настроить отправку письма.
+        print(f'Пользователь {user.email} зарегистрирован.')
+
+async def get_user_manager(user_db=Depends(get_user_db)):
+    """Корутина, возвращающая объект класса UserManager."""
+    yield UserManager(user_db)
+
+
+fastapi_users = FastAPIUsers[User, int](get_user_manager,
+                                        [auth_backend], )
+current_user = fastapi_users.current_user(active=True)
+current_superuser = fastapi_users.current_user(active=True, superuser=True)
