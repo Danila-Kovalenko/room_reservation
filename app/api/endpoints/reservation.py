@@ -9,6 +9,8 @@ from app.api.validators import (check_meeting_room_exists,
                                 check_reservation_before_edit)
 from app.crud.reservation import reservation_crud
 from app.core.db import get_async_session
+from app.core.user import current_user
+from app.models import User
 
 
 router = APIRouter()
@@ -66,3 +68,21 @@ async def update_reservation(reservation_id: int,
     )
     return reservation
 
+@router.post('/', response_model=ReservationDB)
+async def create_reservation(
+        reservation: ReservationCreate,
+        session: AsyncSession = Depends(get_async_session),
+        # Получаем текущего пользователя и сохраняем в переменную user.
+        user: User = Depends(current_user),
+):
+    await check_meeting_room_exists(
+        reservation.meetingroom_id, session
+    )
+    await check_reservation_intersections(
+        **reservation.dict(), session=session
+    )
+    new_reservation = await reservation_crud.create(
+        # Передаём объект пользователя в метод создания объекта бронирования.
+        reservation, session, user
+    )
+    return new_reservation
