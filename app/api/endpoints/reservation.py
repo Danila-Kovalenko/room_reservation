@@ -9,7 +9,7 @@ from app.api.validators import (check_meeting_room_exists,
                                 check_reservation_before_edit)
 from app.crud.reservation import reservation_crud
 from app.core.db import get_async_session
-from app.core.user import current_user
+from app.core.user import current_superuser, current_user
 from app.models import User
 
 
@@ -27,7 +27,7 @@ async def create_reservation(reservation: ReservationCreate,
     new_reser = await reservation_crud.create(reservation, session)
     return new_reser
 
-@router.get('/', response_model=List[ReservationDB])
+@router.get('/', response_model=List[ReservationDB], dependencies=[Depends(current_superuser)],)
 async def get_all_reservations(session: AsyncSession = Depends(get_async_session)):
     """Корутина, возвращающая список всех объектов бронирования."""
     reservations = await reservation_crud.get_multi(session)
@@ -86,3 +86,14 @@ async def create_reservation(
         reservation, session, user
     )
     return new_reservation
+
+@router.get('/my_reservations',
+            response_model=list[ReservationDB],
+            response_model_exclude={'user_id'}, )
+async def get_my_reservations(
+        session: AsyncSession = Depends(get_async_session),
+        user: User = Depends(current_user)):
+    """Получает список всех бронирований для текущего пользователя."""
+    reservations = await reservation_crud.get_by_user(
+        session=session, user=user)
+    return reservations
