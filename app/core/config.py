@@ -3,7 +3,7 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     app_title: str = 'Бронирование переговорок'
-    database_url: str
+    database_url: str = 'sqlite+aiosqlite:///./fastapi.db'
     secret: str = 'SECRET'
 
     class Config:
