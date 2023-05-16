@@ -1,9 +1,11 @@
+from typing import List
+
 from aiogoogle import Aiogoogle
 from aiogoogle.auth.creds import ServiceAccountCreds
 
 from app.core.config import settings
 
-SCOPES = [
+SCOPES: List[str] = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'
 ]
@@ -23,7 +25,8 @@ INFO = {
 
 cred = ServiceAccountCreds(scopes=SCOPES, **INFO)
 
-# Создаём экземпляр класса Aiogoogle
+
 async def get_service():
+    """Создаём экземпляр класса Aiogoogle."""
     async with Aiogoogle(service_account_creds=cred) as aiogoogle:
         yield aiogoogle
