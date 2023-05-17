@@ -1,4 +1,4 @@
-name: room_reservation workflow
+name: Room reservation workflow
 
 on: [push]
 
