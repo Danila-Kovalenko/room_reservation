@@ -1,8 +1,8 @@
-from datetime import timedelta, datetime as dt
+from datetime import datetime as dt
+from datetime import timedelta
 from typing import Optional
 
-from pydantic import BaseModel, Field, Extra, root_validator, validator
-
+from pydantic import BaseModel, Extra, Field, root_validator, validator
 
 FROM_TIME = (dt.now() + timedelta(minutes=10)).isoformat(timespec='minutes')
 TO_TIME = (dt.now() + timedelta(hours=1)).isoformat(timespec='minutes')

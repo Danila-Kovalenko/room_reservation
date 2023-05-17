@@ -10,10 +10,8 @@ from app.core.google_client import get_service
 from app.core.user import current_superuser
 from app.crud.reservation import reservation_crud
 from app.schemas.reservation import ReservationDB
-from app.services.google_api import (set_user_permissions,
-                                     spreadsheets_create,
+from app.services.google_api import (set_user_permissions, spreadsheets_create,
                                      spreadsheets_update_value)
-
 
 router = APIRouter()
 

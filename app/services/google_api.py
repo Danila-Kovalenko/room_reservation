@@ -1,8 +1,8 @@
 from datetime import datetime as dt
 
 from aiogoogle import Aiogoogle
-from app.core.config import settings
 
+from app.core.config import settings
 
 FORMAT = "%Y/%m/%d %H:%M:%S"
 
