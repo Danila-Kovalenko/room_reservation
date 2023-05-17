@@ -26,6 +26,7 @@ async def create_new_meeting_room(meeting_room: MeetingRoomCreate,
     new_room = await meeting_room_crud.create(meeting_room, session)
     return new_room
 
+
 @router.get('/',
             response_model=List[MeetingRoomDB],
             response_model_exclude_none=True, )
@@ -33,11 +34,12 @@ async def get_all_meeting_rooms(session: AsyncSession = Depends(get_async_sessio
     all_rooms = await meeting_room_crud.get_multi(session)
     return all_rooms
 
+
 @router.patch('/{meeting_room_id}',
               response_model=MeetingRoomDB,
               response_model_exclude_none=True,
               dependencies=[Depends(current_superuser)],)
-async def partially_update_meeting_room(meeting_room_id: int, # ID обновляемого объекта.
+async def partially_update_meeting_room(meeting_room_id: int,
                                         # JSON-данные, отправленные пользователем.
                                         obj_in: MeetingRoomUpdate,
                                         session: AsyncSession = Depends(get_async_session), ):
@@ -47,6 +49,7 @@ async def partially_update_meeting_room(meeting_room_id: int, # ID обновл�
         await check_name_duplicate(obj_in.name, session)
     meeting_room = await meeting_room_crud.update(meeting_room, obj_in, session)
     return meeting_room
+
 
 @router.delete('/{meeting_room_id}',
                response_model=MeetingRoomDB,
@@ -59,6 +62,7 @@ async def remove_meeting_room(meeting_room_id: int,
     meeting_room = await meeting_room_crud.remove(meeting_room, session)
     return meeting_room
 
+
 @router.get('/meeting_rooms/{meeting_room_id}/reservations',
             response_model=List[ReservationDB],
             response_model_exclude={'user_id'}, )
@@ -67,5 +71,5 @@ async def get_reservations_for_room(meeting_room_id: int,
                                     ) -> List[ReservationDB]:
     await check_meeting_room_exists(meeting_room_id, session)
     reservations = await reservation_crud.get_future_reservations_for_room(room_id=meeting_room_id,
-                                                                            session=session)
+                                                                           session=session)
     return reservations

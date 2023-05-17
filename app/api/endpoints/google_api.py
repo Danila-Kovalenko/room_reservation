@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from aiogoogle import Aiogoogle
 from fastapi import APIRouter, Depends
@@ -9,7 +9,6 @@ from app.core.db import get_async_session
 from app.core.google_client import get_service
 from app.core.user import current_superuser
 from app.crud.reservation import reservation_crud
-from app.schemas.reservation import ReservationDB
 from app.services.google_api import (set_user_permissions, spreadsheets_create,
                                      spreadsheets_update_value)
 
@@ -17,8 +16,8 @@ router = APIRouter()
 
 
 @router.post('/',
-            response_model=List[Dict],
-            dependencies=[Depends(current_superuser)], )
+             response_model=List[Dict],
+             dependencies=[Depends(current_superuser)], )
 async def get_report(from_reserve: datetime,
                      to_reserve: datetime,
                      session: AsyncSession = Depends(get_async_session),

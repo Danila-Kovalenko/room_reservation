@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 from typing import List, Optional
 
-from sqlalchemy import and_, between, func, or_, select
+from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDBase
@@ -11,10 +11,9 @@ from app.models import Reservation, User
 class CRUDReservation(CRUDBase):
 
     async def get_reservations_at_the_same_time(self,
-            # Добавляем звёздочку, чтобы обозначить, что все дальнейшие параметры
-            # должны передаваться по ключу. Это позволит располагать
-            # параметры со значением по умолчанию перед параметрами без таких значений.
-                                                *,
+                                                *,  # Добавляем звёздочку, чтобы обозначить, что все дальнейшие параметры
+                                                # должны передаваться по ключу. Это позволит располагать
+                                                # параметры со значением по умолчанию перед параметрами без таких значений.
                                                 meetingroom_id: int,
                                                 from_reserve: dt,
                                                 to_reserve: dt,
@@ -47,7 +46,7 @@ class CRUDReservation(CRUDBase):
                                                room_id: int,
                                                session: AsyncSession):
         """Метод, ищущий объекты, период бронирования которых ещё не истёк."""
-        reservations  = await session.execute(select(Reservation)).where(
+        reservations = await session.execute(select(Reservation)).where(
             Reservation.meetingroom_id == room_id,
             Reservation.to_reserve >= dt.now())
         return reservations.scalars().all()

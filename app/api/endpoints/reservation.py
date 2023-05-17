@@ -20,18 +20,18 @@ router = APIRouter()
 async def create_reservation(reservation: ReservationCreate,
                              session: AsyncSession = Depends(get_async_session), ):
     await check_meeting_room_exists(reservation.meetingroom_id, session)
-    await check_reservation_intersections(
-            # Так как валидатор принимает **kwargs,
-            # аргументы должны быть переданы с указанием ключей.
-                        **reservation.dict(), session=session)
+    await check_reservation_intersections(**reservation.dict(), session=session)
+    # Так как валидатор принимает **kwargs,аргументы должны быть переданы с указанием ключей.
     new_reser = await reservation_crud.create(reservation, session)
     return new_reser
+
 
 @router.get('/', response_model=List[ReservationDB], dependencies=[Depends(current_superuser)],)
 async def get_all_reservations(session: AsyncSession = Depends(get_async_session)):
     """Корутина, возвращающая список всех объектов бронирования."""
     reservations = await reservation_crud.get_multi(session)
     return reservations
+
 
 @router.delete('/{reservation_id}', response_model=ReservationDB)
 async def delete_reservation(reservation_id: int,
@@ -40,6 +40,7 @@ async def delete_reservation(reservation_id: int,
     reservation = await check_reservation_before_edit(reservation_id, session)
     reservation = await reservation_crud.remove(reservation, session)
     return reservation
+
 
 @router.patch('/{reservation_id}', response_model=ReservationDB)
 async def update_reservation(reservation_id: int,
@@ -68,13 +69,13 @@ async def update_reservation(reservation_id: int,
     )
     return reservation
 
+
 @router.post('/', response_model=ReservationDB)
-async def create_reservation(
-        reservation: ReservationCreate,
-        session: AsyncSession = Depends(get_async_session),
-        # Получаем текущего пользователя и сохраняем в переменную user.
-        user: User = Depends(current_user),
-):
+async def create_reservation(reservation: ReservationCreate,
+                             session: AsyncSession = Depends(get_async_session),
+                             # Получаем текущего пользователя и сохраняем в переменную user.
+                             user: User = Depends(current_user),
+                             ):
     await check_meeting_room_exists(
         reservation.meetingroom_id, session
     )
@@ -86,6 +87,7 @@ async def create_reservation(
         reservation, session, user
     )
     return new_reservation
+
 
 @router.get('/my_reservations',
             response_model=list[ReservationDB],

@@ -16,7 +16,7 @@ class CRUDBase:
                   obj_id: int,
                   session: AsyncSession,):
         db_obj = await session.execute(select(self.model).where(
-            self.model.id ==obj_id
+            self.model.id == obj_id
         ))
         return db_obj.scalars().first()
 

@@ -16,6 +16,7 @@ async def check_name_duplicate(room_name: str,
             detail='Переговорка с таким именем уже существует!',
         )
 
+
 async def check_meeting_room_exists(meeting_room_id: int,
                                     session: AsyncSession) -> MeetingRoom:
     """Корутина, проверяющая наличие переговорки."""
@@ -25,6 +26,7 @@ async def check_meeting_room_exists(meeting_room_id: int,
                             detail='Переговорка не найдена!')
     return meeting_room
 
+
 async def check_reservation_intersections(**kwagrs) -> None:
     """Корутина, проверяющая свободен ли запрошенный интервал времени для переговорки."""
     reserv = await reservation_crud.get_reservations_at_the_same_time(**kwagrs)
@@ -32,7 +34,9 @@ async def check_reservation_intersections(**kwagrs) -> None:
         raise HTTPException(status_code=422,
                             detail=str(reserv))
 
-async def check_reservation_before_edit(reservation_id:int, session: AsyncSession,):
+
+async def check_reservation_before_edit(reservation_id: int,
+                                        session: AsyncSession,):
     """Корутина, проверяющая существует ли запрошенный объект бронирования."""
     reservation = await reservation_crud.get(reservation_id, session)
     if not reservation:

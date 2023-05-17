@@ -52,7 +52,7 @@ async def spreadsheets_update_value(spreadsheetid: str,
     table_values = [
         ['Отчет от', now_date_time],
         ['Количество регистраций переговорок'],
-        ['ID переговорки', 'Кол-во бронирований'] ]
+        ['ID переговорки', 'Кол-во бронирований']]
     for res in reservations:
         new_row = [str(res['meetingroom_id']), str(res['count'])]
         table_values.append(new_row)

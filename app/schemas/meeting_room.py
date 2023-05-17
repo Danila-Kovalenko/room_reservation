@@ -8,7 +8,6 @@ class MeetingRoomBase(BaseModel):
     description: Optional[str]
 
 
-
 class MeetingRoomCreate(MeetingRoomBase):
     name: str = Field(..., max_length=100)
 
@@ -25,7 +24,6 @@ class MeetingRoomUpdate(MeetingRoomBase):
         if value is not None:
             return value
         raise ValueError('name must not empty')
-
 
 
 class MeetingRoomDB(MeetingRoomCreate):
